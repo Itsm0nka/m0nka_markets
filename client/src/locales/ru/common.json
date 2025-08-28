@@ -1,0 +1,94 @@
+{
+  "header": {
+    "catalog": "Каталог",
+    "search": "Поиск товаров",
+    "orders": "Заказы",
+    "favorites": "Избранное",
+    "cart": "Корзина",
+    "login": "Войти",
+    "profile": "Профиль",
+    "logout": "Выйти"
+  },
+  "auth": {
+    "login": "Войти",
+    "signup": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "name": "Имя",
+    "loginButton": "Войти",
+    "signupButton": "Зарегистрироваться",
+    "switchToSignup": "Нет аккаунта? Зарегистрируйтесь",
+    "switchToLogin": "Уже есть аккаунт? Войдите",
+    "loginRequired": "Для выполнения этого действия необходимо войти в систему"
+  },
+  "product": {
+    "addToCart": "В корзину",
+    "addToFavorites": "В избранное",
+    "removeFromFavorites": "Убрать из избранного",
+    "inStock": "В наличии",
+    "outOfStock": "Нет в наличии",
+    "rating": "Рейтинг",
+    "reviews": "отзывов",
+    "specifications": "Характеристики",
+    "description": "Описание",
+    "installment": "Рассрочка",
+    "monthsInstallment": "месяцев",
+    "promoCode": "Промокод",
+    "applyPromoCode": "Применить"
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Ваша корзина пуста",
+    "total": "Итого",
+    "checkout": "Оформить заказ",
+    "quantity": "Количество",
+    "remove": "Удалить",
+    "continueShopping": "Продолжить покупки"
+  },
+  "categories": {
+    "electronics": "Электроника",
+    "clothing": "Одежда",
+    "home": "Дом и сад",
+    "sports": "Спорт",
+    "books": "Книги",
+    "beauty": "Красота"
+  },
+  "footer": {
+    "company": "О компании",
+    "aboutUs": "О нас",
+    "careers": "Карьера",
+    "press": "Пресса",
+    "help": "Помощь",
+    "support": "Поддержка",
+    "faq": "FAQ",
+    "returns": "Возврат",
+    "social": "Социальные сети",
+    "newsletter": "Подпишитесь на новости",
+    "subscribe": "Подписаться",
+    "darkMode": "Тёмная тема",
+    "lightMode": "Светлая тема"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "sort": "Сортировка",
+    "price": "Цена",
+    "from": "от",
+    "currency": "сум",
+    "close": "Закрыть",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "save": "Сохранить"
+  },
+  "checkout": {
+    "title": "Оформление заказа",
+    "orderSummary": "Итоги заказа",
+    "placeOrder": "Разместить заказ",
+    "orderPlaced": "Заказ размещён",
+    "thankYou": "Спасибо за покупку!"
+  },
+  "Topish": "Поиск"
+}

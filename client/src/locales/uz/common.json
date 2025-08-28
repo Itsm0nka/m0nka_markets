@@ -1,0 +1,94 @@
+{
+  "header": {
+    "catalog": "Katalog",
+    "search": "Mahsulotlarni qidirish",
+    "orders": "Buyurtmalar",
+    "favorites": "Sevimlilar",
+    "cart": "Savatcha",
+    "login": "Kirish",
+    "profile": "Profil",
+    "logout": "Chiqish"
+  },
+  "auth": {
+    "login": "Kirish",
+    "signup": "Ro'yxatdan o'tish",
+    "email": "Email",
+    "password": "Parol",
+    "confirmPassword": "Parolni tasdiqlang",
+    "name": "Ism",
+    "loginButton": "Kirish",
+    "signupButton": "Ro'yxatdan o'tish",
+    "switchToSignup": "Akkaunt yo'qmi? Ro'yxatdan o'ting",
+    "switchToLogin": "Akkaunt bormi? Kiring",
+    "loginRequired": "Bu amalni bajarish uchun tizimga kirish kerak"
+  },
+  "product": {
+    "addToCart": "Savatchaga",
+    "addToFavorites": "Sevimlilarga",
+    "removeFromFavorites": "Sevimlilardan olib tashlash",
+    "inStock": "Mavjud",
+    "outOfStock": "Mavjud emas",
+    "rating": "Reyting",
+    "reviews": "sharhlar",
+    "specifications": "Xususiyatlari",
+    "description": "Tavsif",
+    "installment": "Bo'lib to'lash",
+    "monthsInstallment": "oyga",
+    "promoCode": "Promo kod",
+    "applyPromoCode": "Qo'llash"
+  },
+  "cart": {
+    "title": "Savatcha",
+    "empty": "Savatchangiz bo'sh",
+    "total": "Jami",
+    "checkout": "Buyurtma berish",
+    "quantity": "Miqdor",
+    "remove": "O'chirish",
+    "continueShopping": "Xarid qilishda davom eting"
+  },
+  "categories": {
+    "electronics": "Elektronika",
+    "clothing": "Kiyim",
+    "home": "Uy va bog'",
+    "sports": "Sport",
+    "books": "Kitoblar",
+    "beauty": "Go'zallik"
+  },
+  "footer": {
+    "company": "Kompaniya haqida",
+    "aboutUs": "Biz haqimizda",
+    "careers": "Martaba",
+    "press": "Matbuot",
+    "help": "Yordam",
+    "support": "Qo'llab-quvvatlash",
+    "faq": "FAQ",
+    "returns": "Qaytarish",
+    "social": "Ijtimoiy tarmoqlar",
+    "newsletter": "Yangiliklarga obuna bo'ling",
+    "subscribe": "Obuna bo'lish",
+    "darkMode": "Qorong'u rejim",
+    "lightMode": "Yorug' rejim"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik",
+    "search": "Qidirish",
+    "filter": "Filtr",
+    "sort": "Saralash",
+    "price": "Narx",
+    "from": "dan",
+    "currency": "so'm",
+    "close": "Yopish",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "save": "Saqlash"
+  },
+  "checkout": {
+    "title": "Buyurtmani rasmiylashtirish",
+    "orderSummary": "Buyurtma xulosasi",
+    "placeOrder": "Buyurtma berish",
+    "orderPlaced": "Buyurtma berildi",
+    "thankYou": "Xarid uchun rahmat!"
+  },
+  "Topish": "Topish"
+}
