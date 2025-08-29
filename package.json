@@ -1,18 +1,18 @@
 {
-  "name": "marketplace-prototype",
+  "name": "m0nka_market",
   "private": true,
-  "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "client:dev": "cd client && npm run dev",
-    "server:dev": "cd server && npm run dev",
-    "build": "cd client && npm run build",
-    "test": "cd server && npm test",
-    "setup": "npm run install:all && npm run db:setup",
-    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
-    "db:setup": "cd server && npm run db:migrate && npm run db:seed",
-    "seed": "ts-node ./prisma/seed.ts"
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "preview:client": "npm run preview --prefix client",
+
+    "dev:server": "npm run dev --prefix server",
+    "build:server": "npm run build --prefix server",
+    "start:server": "npm run start --prefix server",
+
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "npm run build:client && npm run build:server",
+    "start": "npm run start:server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
