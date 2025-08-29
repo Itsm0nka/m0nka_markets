@@ -20,7 +20,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import AuthModal from "../components/AuthModal";
 
 interface Product {
-  id: string;
+  _id: string; // ✅ исправил на _id
   title: string;
   description: string;
   category: string;
@@ -33,6 +33,7 @@ interface Product {
   inStock: boolean;
   specifications?: Record<string, string>;
 }
+
 export const BASE_API_URL = "http://localhost:3000";
 
 const ProductPage: React.FC = () => {
@@ -40,9 +41,7 @@ const ProductPage: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { addToCart } = useCart();
-  const { isFavorite, getFavoriteId, addToFavorites, removeFromFavorites } =
-    useFavorites();
-
+  const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +82,7 @@ const ProductPage: React.FC = () => {
     if (!product) return;
 
     try {
-      await addToCart(product.id, quantity);
+      addToCart(product); // ✅ передаем целый объект product
       alert(t("product.addedToCart", "Added to cart!"));
     } catch {
       alert(t("common.errorOccurred", "An error occurred."));
@@ -98,14 +97,11 @@ const ProductPage: React.FC = () => {
     if (!product) return;
 
     try {
-      if (isFavorite(product.id)) {
-        const favId = getFavoriteId(product.id);
-        if (favId) {
-          await removeFromFavorites(favId);
-          alert(t("product.removedFromFavorites", "Removed from favorites."));
-        }
+      if (isFavorite(product._id)) {
+        removeFromFavorites(product._id); // ✅ удаляем по _id
+        alert(t("product.removedFromFavorites", "Removed from favorites."));
       } else {
-        await addToFavorites(product.id);
+        addToFavorites(product); // ✅ добавляем весь product
         alert(t("product.addedToFavorites", "Added to favorites."));
       }
     } catch {
@@ -276,12 +272,20 @@ const ProductPage: React.FC = () => {
               <button
                 onClick={handleToggleFavorite}
                 className={`p-3 rounded-lg border ${
-                  isFavorite(product.id)
-                    ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400"
+                  isFavorite(product._id)
+                    ? " text-red-600 dark:text-red-400"
                     : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300"
                 }`}
               >
-                <Heart className="w-5 h-5" />
+                <Heart
+                  className={`w-5 h-5 cursor-pointer ${
+                    isFavorite(product._id)
+                      ? "text-red-600 dark:text-red-500"
+                      : "text-gray-400 dark:text-gray-300 hover:text-red-500"
+                  }`}
+                  fill={isFavorite(product._id) ? "currentColor" : "none"}
+                  onClick={() => toggleFavorite(product._id)}
+                />
               </button>
             </div>
           </div>

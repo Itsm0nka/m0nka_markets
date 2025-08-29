@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Product } from "../types";
-import { useCart } from "../hooks/useCard";
+import { useCart } from "../context/CartContext";
 import { useFavorites } from "../hooks/useFavorites";
+import toast from "react-hot-toast";
 
 interface ProductCardProps {
   product: Product;
@@ -13,22 +14,40 @@ interface ProductCardProps {
   user?: any;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAuthRequired, user }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  onAuthRequired,
+  user,
+}) => {
   const { t } = useTranslation();
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
-  const { isInCart, addToCart } = useCart();
+  const { items, addToCart } = useCart();
 
   const handleToggleFavorite = () => {
-    if (isFavorite(product._id)) removeFromFavorites(product._id);
-    else addToFavorites(product);
+    if (isFavorite(product._id)) {
+      removeFromFavorites(product._id);
+      toast.error(`${product.title} удалён(а) из избранного`);
+    } else {
+      addToFavorites(product);
+      toast.success(`${product.title} добавлен(а) в избранное`);
+    }
   };
 
   const handleAddToCart = () => {
-    addToCart(product);
+    const alreadyInCart = items.some((i) => i.product._id === product._id);
+
+    if (alreadyInCart) {
+      toast.error(`${product.title} уже в корзине`);
+    } else {
+      addToCart(product);
+      toast.success(`${product.title} добавлен(а) в корзину`);
+    }
   };
 
   const discountPercentage = product.discountPrice
-    ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
+    ? Math.round(
+        ((product.price - product.discountPrice) / product.price) * 100
+      )
     : 0;
 
   const formatPrice = (value: number) => value.toLocaleString("ru-RU");
@@ -36,7 +55,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAuthRequired, user
   return (
     <motion.div
       whileHover={{ y: -4 }}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group hover:shadow-lg transition-shadow duration-300"
+      className="bg-white flex flex-col justify-around
+  dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group hover:shadow-lg transition-shadow duration-300"
     >
       <Link to={`/product/${product._id}`} className="block">
         <div className="relative aspect-square overflow-hidden">
@@ -98,7 +118,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAuthRequired, user
                 {t("common.from")}{" "}
                 {formatPrice(
                   Math.round(
-                    (product.discountPrice || product.price) / product.installmentMonths
+                    (product.discountPrice || product.price) /
+                      product.installmentMonths
                   )
                 )}{" "}
                 {t("common.currency")}/мес
@@ -117,7 +138,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAuthRequired, user
               : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-500"
           }`}
         >
-          <Heart className={`h-4 w-4 ${isFavorite(product._id) ? "fill-current" : ""}`} />
+          <Heart
+            className={`h-4 w-4 ${
+              isFavorite(product._id) ? "fill-current" : ""
+            }`}
+          />
         </button>
 
         <button

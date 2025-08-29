@@ -90,5 +90,11 @@
     "orderPlaced": "Заказ размещён",
     "thankYou": "Спасибо за покупку!"
   },
-  "Topish": "Поиск"
+  "Topish": "Поиск",
+      "cart.summary": "Корзина",
+    "cart.subtotal": "Итого",
+    "cart.items": "Товары",
+    "cart.delivery": "Доставка",
+    "cart.freeDelivery": "Бесплатная доставка",
+    "common.total": "Всего"
 }

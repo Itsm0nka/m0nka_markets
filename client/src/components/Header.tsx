@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, ShoppingCart, Heart, User, Package, LogOut } from "lucide-react";
+import {
+  Menu,
+  ShoppingCart,
+  Heart,
+  User,
+  Package,
+  LogOut,
+} from "lucide-react";
 import img from "../../assets/img.png";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -12,13 +19,15 @@ import AuthModal from "./AuthModal";
 import LanguageSwitcher from "./LanguageSwitcher";
 import logo from "../../../png.png";
 import Dark from "../Dark";
-import Swiper from './Swiper'
+import Swiper from "./Swiper";
+import { Axios } from "../middlewares/Axios"; 
 
 const Header: React.FC = () => {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -26,19 +35,56 @@ const Header: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 300);
 
+  // 🔥 подсказки теперь из API
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+
+  // Если URL содержит ?q=..., записываем в инпут
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get("q") || "";
+    setSearchQuery(q);
+  }, [location.search]);
+
+  // загрузка подсказок с API
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (debouncedSearch.trim().length > 0) {
+        try {
+          const res = await Axios.get("/products", {
+            params: { q: debouncedSearch, limit: 5 },
+          });
+          setSuggestions(res.data?.data || []);
+        } catch (err) {
+          console.error("Ошибка загрузки подсказок:", err);
+          setSuggestions([]);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedSearch]);
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (debouncedSearch.trim()) {
-      navigate(`/?q=${encodeURIComponent(debouncedSearch)}`);
+    if (searchQuery.trim()) {
+      navigate(`/?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSuggestions([]); // закрываем подсказки
     }
+  };
+
+  const handleSuggestionClick = (value: string) => {
+    setSearchQuery(value);
+    navigate(`/?q=${encodeURIComponent(value)}`);
+    setSuggestions([]);
   };
 
   return (
     <>
-      <header className=" top-0 left-0 right-0 z-9999 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="top-0 left-0 right-0 z-9999 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <a href="max-w-[1800px">
-          {" "}
-          <img src={img} alt="" />{" "}
+          <img src={img} alt="" />
         </a>
         <div className="max-w-[1440px] container mx-auto px-4 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -58,7 +104,8 @@ const Header: React.FC = () => {
             </button>
           </div>
 
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+          {/* --- SEARCH WITH AUTOCOMPLETE --- */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative">
             <div className="flex border-2 h-11 border-yellow-300 rounded-[7px] overflow-hidden">
               <input
                 type="text"
@@ -74,15 +121,49 @@ const Header: React.FC = () => {
                 {t("Topish")}
               </button>
             </div>
+
+            {/* --- DROPDOWN подсказки --- */}
+            <AnimatePresence>
+              {suggestions.length > 0 && (
+                <motion.ul
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg mt-1 z-50 max-h-80 overflow-y-auto"
+                >
+                  {suggestions.map((product) => (
+                    <li
+                      key={product._id}
+                      onClick={() => handleSuggestionClick(product.title)}
+                      className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200"
+                    >
+                      {/* картинка */}
+                      <img
+                         src={product.images?.[0]}
+                        alt={product.title}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                      {/* инфо */}
+                      <div className="flex flex-col">
+                        <span className="font-medium">{product.title}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {product.price} $
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
           </form>
 
+          {/* --- ICONS --- */}
           <div className="flex items-center gap-4">
             <Dark />
             <LanguageSwitcher />
             <Link
               to="/orders"
               className="flex flex-col items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors"
-              aria-label={t("header.orders")}
             >
               <Package className="h-6 w-6" />
               <span className="text-xs hidden sm:block">
@@ -92,7 +173,6 @@ const Header: React.FC = () => {
             <Link
               to="/favorites"
               className="flex flex-col items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors"
-              aria-label={t("header.favorites")}
             >
               <Heart className="h-6 w-6" />
               <span className="text-xs hidden sm:block">
@@ -102,7 +182,6 @@ const Header: React.FC = () => {
             <Link
               to="/cart"
               className="relative flex flex-col items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors"
-              aria-label={t("header.cart")}
             >
               <ShoppingCart className="h-6 w-6" />
               <span className="text-xs hidden sm:block">
@@ -115,6 +194,7 @@ const Header: React.FC = () => {
               )}
             </Link>
 
+            {/* --- USER MENU --- */}
             <div className="relative">
               {user ? (
                 <>
@@ -174,6 +254,7 @@ const Header: React.FC = () => {
           </div>
         </div>
 
+        {/* --- CATEGORIES --- */}
         <div className="bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
           <div className="max-w-container mx-auto px-4 py-3">
             <div className="flex items-center gap-6 overflow-x-auto">
@@ -198,6 +279,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
+      {/* BACKDROP */}
       <AnimatePresence>
         {isCatalogOpen && (
           <motion.div
@@ -217,6 +299,7 @@ const Header: React.FC = () => {
         />
       )}
 
+      {/* MODALS */}
       <CatalogSidebar
         isOpen={isCatalogOpen}
         onClose={() => setIsCatalogOpen(false)}
@@ -231,3 +314,4 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+0

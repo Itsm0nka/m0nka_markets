@@ -45,6 +45,17 @@ export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
+export interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  discountPrice?: number;
+  inStock: boolean;
+  rating: number;
+  reviewCount: number;
+  installmentMonths?: number;
+  images: string[]; // массив URL или base64
+}
 
 export interface PaginatedResponse<T> {
   data: T[];

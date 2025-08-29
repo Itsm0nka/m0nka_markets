@@ -90,5 +90,11 @@
     "orderPlaced": "Buyurtma berildi",
     "thankYou": "Xarid uchun rahmat!"
   },
-  "Topish": "Topish"
+  "Topish": "Topish",
+      "cart.summary": "Savatcha",
+    "cart.subtotal": "Jami",
+    "cart.items": "Mahsulotlar",
+    "cart.delivery": "Yetkazib berish",
+    "cart.freeDelivery": "Bepul yetkazib berish",
+    "common.total": "Umumiy"
 }

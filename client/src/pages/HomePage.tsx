@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom"; 
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import ProductCard from "../components/ProductCard";
 import AuthModal from "../components/AuthModal";
 import { Axios } from "../middlewares/Axios";
+import { useDebounce } from "../hooks/useDebounce";
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
@@ -14,10 +15,11 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const searchQuery = searchParams.get("q") || undefined;
-  const category = searchParams.get("category") || undefined;
+  const searchQuery = searchParams.get("q") || "";
+  const category = searchParams.get("category") || "";
 
-  const debounceTimer = useRef<number | null>(null);
+  // debounce для поиска
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -26,7 +28,7 @@ const HomePage: React.FC = () => {
         setError(null);
 
         const params: Record<string, string> = {};
-        if (searchQuery) params.q = searchQuery;
+        if (debouncedQuery) params.q = debouncedQuery;
         if (category) params.category = category;
 
         const response = await Axios.get("/products", { params });
@@ -38,19 +40,8 @@ const HomePage: React.FC = () => {
       }
     };
 
-    if (debounceTimer.current) window.clearTimeout(debounceTimer.current);
-
-    debounceTimer.current = window.setTimeout(() => {
-      loadProducts();
-    }, 500);
-
-    return () => {
-      if (debounceTimer.current) window.clearTimeout(debounceTimer.current);
-    };
-  }, [searchQuery, category]);
-
-  console.log(products);
-  
+    loadProducts();
+  }, [debouncedQuery, category]);
 
   return (
     <>
@@ -73,7 +64,7 @@ const HomePage: React.FC = () => {
             {products.length > 0 ? (
               products.map(product => (
                 <ProductCard
-                  key={product.id || product._id}
+                  key={product._id || product.id}
                   product={product}
                   onAuthRequired={() => setIsAuthModalOpen(true)}
                 />
