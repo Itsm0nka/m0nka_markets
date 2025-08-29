@@ -4,7 +4,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import morgan from "morgan"
+import morgan from "morgan";
 
 import authRoutes from "./routes/auth";
 import productRoutes from "./routes/products";
@@ -15,8 +15,8 @@ import { errorHandler } from "./middleware/errorHandler";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+// DB
 const mongoUri = process.env.DATABASE_URL || "";
 if (!mongoUri) throw new Error("No Mongo URI found");
 mongoose.connect(mongoUri).then(() => console.log("MongoDB connected"));
@@ -26,7 +26,7 @@ app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"))
+app.use(morgan("dev"));
 
 // Health
 app.get("/health", (_, res) => res.json({ status: "ok" }));
@@ -58,4 +58,5 @@ app.use("/api/favorites", authMiddleware, favoritesRoutes);
 app.use("*", (_, res) => res.status(404).json({ message: "Not found" }));
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// ✅ вместо app.listen экспортируем handler для Vercel
+export default app;
