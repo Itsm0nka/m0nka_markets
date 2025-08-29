@@ -16,10 +16,10 @@ dotenv.config();
 
 const app = express();
 
-// DB
 const mongoUri = process.env.DATABASE_URL || "";
 if (!mongoUri) throw new Error("No Mongo URI found");
-mongoose.connect(mongoUri).then(() => console.log("MongoDB connected"));
+
+mongoose.connect(mongoUri).then(() => console.log("✅ MongoDB connected"));
 
 // Middlewares
 app.use(helmet());
@@ -58,5 +58,6 @@ app.use("/api/favorites", authMiddleware, favoritesRoutes);
 app.use("*", (_, res) => res.status(404).json({ message: "Not found" }));
 app.use(errorHandler);
 
-// ✅ вместо app.listen экспортируем handler для Vercel
+// ❌ Убираем app.listen, потому что Vercel сам создаёт сервер
+// ✅ Экспортируем handler для Vercel
 export default app;
